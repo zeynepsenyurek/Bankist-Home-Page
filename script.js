@@ -7,6 +7,16 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+const header = document.querySelector('.header');
+const message = document.createElement('div');
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+const nav = document.querySelector('.nav');
+
+message.classList.add('cookie-message');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -30,10 +40,6 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-const header = document.querySelector('.header');
-const message = document.createElement('div');
-message.classList.add('cookie-message');
-
 message.innerHTML =
   'We use cookies for improved functionality and analytics. <button class="btn btn--close-cookie"> Got it! </button>';
 header.prepend(message);
@@ -46,8 +52,47 @@ document
 message.style.backgroundColor = '#37383d';
 message.style.width = '120%';
 
-const section1 = document.querySelector('#section--1');
-const btnScrollTo = document.querySelector('.btn--scroll-to');
 btnScrollTo.addEventListener('click', function (e) {
-  section1.scrollIntoView({ behaviour: 'smooth' });
+  section1.scrollIntoView({ behavior: 'smooth' });
 });
+
+document.querySelector('.nav__links').addEventListener('click', e => {
+  e.preventDefault();
+  if (e.target.classList.contains('nav__link')) {
+    const id = e.target.getAttribute('href');
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+////////// TAB COMPONENT
+
+tabContainer.addEventListener('click', e => {
+  const clicked = e.target.closest('.operations__tab');
+
+  if (!clicked) return;
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  clicked.classList.add('operations__tab--active');
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
+/////////// FADING NAV ANIMATION
+
+const handleHover = function (e, op) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
